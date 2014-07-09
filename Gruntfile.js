@@ -13,7 +13,6 @@ module.exports = function(grunt) {
 		},
 		setup:{
 			development:{
-				basePath: './development/',
 				assets: [
 					{
 						folder: 'sass',
@@ -33,13 +32,18 @@ module.exports = function(grunt) {
 							'scripts.js'
 						]
 					},
-					{ folder: 'js/plugins' },
-					{ folder: 'fonts' },
-					{ folder: 'img' }
+					{
+						folder: 'js/plugins'
+					},
+					{
+						folder: 'fonts'
+					},
+					{
+						folder: 'img'
+					}
 				]
 			},
 			public:{
-				basePath: './public/',
 				assets: [
 					{ folder: 'css' },
 					{ folder: 'js' },
@@ -150,9 +154,6 @@ module.exports = function(grunt) {
 	});
 
 	grunt.loadNpmTasks('grunt-sass');
-	grunt.loadNpmTasks('grunt-mkdir');
-	grunt.loadNpmTasks('grunt-contrib');
-
 	grunt.loadNpmTasks('grunt-bower-task');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
@@ -165,7 +166,7 @@ module.exports = function(grunt) {
 
 	grunt.registerMultiTask('setup', 'Setup project structure', function() {
 
-		var basePath 	= this.data.basePath;
+		var basePath 	= './'+ this.target +'/';
 		var assets 		= this.data.assets;
 
 		assets.forEach(function( asset ){
