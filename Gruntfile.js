@@ -73,13 +73,21 @@ module.exports = function(grunt) {
 		},
 
 		compass: {
-			options: {
-				sassDir: 'sass',
-				cssDir: '../public/css'
-			},
-			dist: {
+			dist:{
 				options: {
-					environment: 'production'
+					sassDir: './development/sass',
+					cssDir: './public/css',
+					outputStyle: 'compressed',
+					environment: 'production',
+					clean: true
+				}
+			},
+			dev:{
+				options: {
+					sassDir: './development/sass',
+					cssDir: './public/css',
+					outputStyle: 'expanded',
+					environment: 'development'
 				}
 			}
 		},
@@ -197,7 +205,7 @@ module.exports = function(grunt) {
 		});
 	});
 
-	grunt.registerTask('install', ['setup', 'bower', 'copy:copyFiles', 'clean:bowerFiles']);
-	// grunt.registerTask('compass', ['compass']);
+	// grunt.registerTask('install', ['setup', 'bower', 'copy:copyFiles', 'clean:bowerFiles', 'compass:dev']);
+	grunt.registerTask('renderCSS', ['compass:dev']);
 	// grunt.registerTask('default', ['concat', 'uglify', 'jshint', 'watch']);
 }
