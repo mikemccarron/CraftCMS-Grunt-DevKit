@@ -8,6 +8,7 @@
 		"grunt-bower-task": "0.3.4",
 
 		"grunt-concurrent": "0.5.0",
+		"grunt-newer": "0.7.0",
 		"grunt-contrib-uglify": "0.5.0",
 		"grunt-contrib-jshint": "~0.10.0",
 		"grunt-contrib-watch": "~0.6.1",
