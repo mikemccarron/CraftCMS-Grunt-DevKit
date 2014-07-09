@@ -72,6 +72,15 @@ module.exports = function(grunt) {
 			bowerFiles: ['development/js/libs/normalize-scss/']
 		},
 
+		concurrent: {
+			dev: {
+				options: {
+					logConcurrentOutput: true
+				},
+				tasks: ['compass:dev']
+			}
+		},
+
 		compass: {
 			dist:{
 				options: {
@@ -79,7 +88,8 @@ module.exports = function(grunt) {
 					cssDir: './public/css',
 					outputStyle: 'compressed',
 					environment: 'production',
-					clean: true
+					clean: true,
+					watch: false
 				}
 			},
 			dev:{
@@ -87,7 +97,8 @@ module.exports = function(grunt) {
 					sassDir: './development/sass',
 					cssDir: './public/css',
 					outputStyle: 'expanded',
-					environment: 'development'
+					environment: 'development',
+					watch: true
 				}
 			}
 		},
@@ -117,8 +128,8 @@ module.exports = function(grunt) {
 				 separator: ';'
 			},
 			dist: {
-				src: 'js/plugins/**/*.js',
-				dest: '../public/js/plugins/plugins.js'
+				src: './development/js/plugins/**/*.js',
+				dest: './public/js/plugins/plugins.js'
 			}
 		},
 
@@ -134,36 +145,28 @@ module.exports = function(grunt) {
 		},
 
 		watch: {
-			grunt: {
-				files: ['Gruntfile.js'],
-				options: {
-					reload: true
-				}
-			},
-			imagemin:{
-				files: ['img/prod/**/**'],
-				tasks: ['imagemin'],
-			},
-			compass: {
-				files: 'sass/**/*.scss',
-				tasks: ['compass'],
-				options:{
-					livereload: true
-				}
-			},
-			uglify:{
-				files: ['js/_src/scripts.js'],
-				tasks: ['uglify:src'],
-				options:{
-					livereload: true
-				}
+			concat:{
+				files: ['./development/js/plugins/**'],
+				tasks: ['newer:concat:dist']
 			}
+			// imagemin:{
+			// 	files: ['img/prod/**/**'],
+			// 	tasks: ['imagemin'],
+			// },
+			// uglify:{
+			// 	files: ['js/_src/scripts.js'],
+			// 	tasks: ['uglify:src'],
+			// 	options:{
+			// 		livereload: true
+			// 	}
+			// }
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-sass');
 	grunt.loadNpmTasks('grunt-bower-task');
 	grunt.loadNpmTasks('grunt-concurrent');
+	grunt.loadNpmTasks('grunt-newer');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -206,7 +209,7 @@ module.exports = function(grunt) {
 		});
 	});
 
-	// grunt.registerTask('install', ['setup', 'bower', 'copy:copyFiles', 'clean:bowerFiles', 'compass:dev']);
+	grunt.registerTask('install', ['setup', 'bower', 'copy:copyFiles', 'clean:bowerFiles', 'compass:dev']);
 	grunt.registerTask('renderCSS', ['compass:dev']);
-	// grunt.registerTask('default', ['concat', 'uglify', 'jshint', 'watch']);
+	grunt.registerTask('default', ['watch']);
 }
