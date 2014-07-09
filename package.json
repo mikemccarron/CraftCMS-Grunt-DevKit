@@ -1,0 +1,22 @@
+{
+	"name": "Grunt-CraftCMS-dev-kit",
+	"version": "0.0.1",
+	"description": "A Grunt development workflow designed for working within a Craft CMS (https://buildwithcraft.com) project.",
+	"devDependencies": {
+		"node-sass": "~0.8.3",
+		"grunt": "~0.4.4",
+		"grunt-sass": "~0.11.0",
+		"grunt-contrib-uglify": "0.4.0",
+		"grunt-contrib": "~0.11.0",
+		"grunt-mkdir": "~0.1.1",
+		"grunt-bower-task": "0.3.4",
+		"grunt-contrib-jshint": "~0.10.0",
+		"grunt-contrib-watch": "~0.6.0",
+		"grunt-contrib-clean": "~0.5.0",
+		"grunt-contrib-copy": "~0.5.0",
+		"grunt-contrib-concat": "~0.4.0",
+		"grunt-contrib-compass": "~0.7.2",
+		"grunt-contrib-imagemin": "^0.7.0",
+		"grunt-contrib-livereload": "~0.1.2"
+	}
+}

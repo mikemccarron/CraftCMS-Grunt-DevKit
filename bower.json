@@ -1,0 +1,14 @@
+{
+	"name": "grunt-craftcms-dev-kit",
+	"version": "0.0.1",
+	"dependencies": {
+		"modernizr": "latest",
+		"jquery": "latest",
+		"gsap": "latest",
+		"normalize-scss": "latest"
+	},
+	"authors": [
+		"Mike McCarron <mike@mikemccarron.com>"
+	],
+	"license": "MIT"
+}
