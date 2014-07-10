@@ -61,33 +61,33 @@ module.exports = function(grunt) {
 			copyFiles: {
 				files: [
 					 {
-					 	expand: true,
-					 	flatten: true,
-					 	src: ['development/js/libs/normalize-scss/*.scss'],
-					 	dest: 'development/sass',
-					 	filter: 'isFile'
+						expand: true,
+						flatten: true,
+						src: ['development/js/libs/normalize-scss/*.scss'],
+						dest: 'development/sass',
+						filter: 'isFile'
 					 }
 				]
 			},
 			public: {
 				files: [
 					 {
-					 	expand: true,
-					 	flatten: false,
-					 	cwd: './development/',
-					 	src: ['**', '!sass/**', '!**/scripts.js'],
-					 	dest: 'public/'
+						expand: true,
+						flatten: false,
+						cwd: './development/',
+						src: ['**', '!sass/**', '!**/scripts.js'],
+						dest: 'public/'
 					 }
 				]
 			},
 			images:{
 				files: [
 					 {
-					 	expand: true,
-					 	flatten: false,
-					 	cwd: './development/',
-					 	src: ['img/**'],
-					 	dest: 'public/'
+						expand: true,
+						flatten: false,
+						cwd: './development/',
+						src: ['img/**'],
+						dest: 'public/'
 					 }
 				]
 			}
@@ -128,23 +128,31 @@ module.exports = function(grunt) {
 
 		uglify: {
 			options: {
-				banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+				banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n',
+				compress: {
+					drop_console: true
+				},
+				sourceMap: true,
+				preserveComments: false
 			},
-			dist: {
-				files: {
-					'js/plugins.min.js': ['<%= concat.dist.dest %>']
-				}
-			},
-			src:{
-				files: {
-					'js/scripts.min.js': ['js/_src/scripts.js']
-				}
+			js:{
+				options: {
+					mangle: {
+						except: ['jQuery', 'Backbone']
+					}
+				},
+				files: [{
+					expand: true,
+					cwd: 'development/js',
+					src: '*.js',
+					dest: 'public/js'
+				}]
 			}
 		},
 
-		jshint:{
-			files: ['js/**/*.js']
-		},
+		// jshint:{
+		// 	files: ['js/**/*.js']
+		// },
 
 		concat: {
 			options: {
@@ -171,6 +179,7 @@ module.exports = function(grunt) {
 					}
 				]
 			},
+
 			jpg:{
 				options: {
 					 progressive: true
@@ -185,6 +194,7 @@ module.exports = function(grunt) {
 					}
 				]
 			},
+
 			gif:{
 				options: {
 					interlaced: true
@@ -199,6 +209,7 @@ module.exports = function(grunt) {
 					}
 				]
 			},
+
 			svg:{
 				files: [
 					{
@@ -217,21 +228,14 @@ module.exports = function(grunt) {
 			// 	files: ['./development/js/plugins/**'],
 			// 	tasks: ['newer:concat:dist']
 			// },
-			// newimages:{
-			// 	files: ['development/img/**'],
-			// 	tasks: ['copy:images']
-			// },
 			imagemin:{
 				files: ['development/img/**'],
 				tasks: ['newer:imagemin'],
+			},
+			uglify:{
+				files: ['development/js/*.js'],
+				tasks: ['uglify:js']
 			}
-			// uglify:{
-			// 	files: ['js/_src/scripts.js'],
-			// 	tasks: ['uglify:src'],
-			// 	options:{
-			// 		livereload: true
-			// 	}
-			// }
 		}
 	});
 
