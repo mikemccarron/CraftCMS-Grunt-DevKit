@@ -11,6 +11,7 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+
 		setup:{
 			development:{
 				assets: [
@@ -42,18 +43,20 @@ module.exports = function(grunt) {
 						folder: 'img'
 					}
 				]
-			},
-			public:{
-				assets: [
-					{ folder: 'css' },
-					{ folder: 'js' },
-					{ folder: 'js/libs' },
-					{ folder: 'js/plugins' },
-					{ folder: 'fonts' },
-					{ folder: 'img' },
-				]
 			}
+			// ,
+			// public:{
+			// 	assets: [
+			// 		{ folder: 'css' },
+			// 		{ folder: 'js' },
+			// 		{ folder: 'js/libs' },
+			// 		{ folder: 'js/plugins' },
+			// 		{ folder: 'fonts' },
+			// 		{ folder: 'img' },
+			// 	]
+			// }
 		},
+
 		copy:{
 			copyFiles: {
 				files: [
@@ -63,6 +66,28 @@ module.exports = function(grunt) {
 					 	src: ['development/js/libs/normalize-scss/*.scss'],
 					 	dest: 'development/sass',
 					 	filter: 'isFile'
+					 }
+				]
+			},
+			public: {
+				files: [
+					 {
+					 	expand: true,
+					 	flatten: false,
+					 	cwd: './development/',
+					 	src: ['**', '!sass/**', '!**/scripts.js'],
+					 	dest: 'public/'
+					 }
+				]
+			},
+			images:{
+				files: [
+					 {
+					 	expand: true,
+					 	flatten: false,
+					 	cwd: './development/',
+					 	src: ['img/**'],
+					 	dest: 'public/'
 					 }
 				]
 			}
@@ -87,9 +112,7 @@ module.exports = function(grunt) {
 					sassDir: './development/sass',
 					cssDir: './public/css',
 					outputStyle: 'compressed',
-					environment: 'production',
-					clean: true,
-					watch: false
+					environment: 'production'
 				}
 			},
 			dev:{
@@ -134,25 +157,74 @@ module.exports = function(grunt) {
 		},
 
 		imagemin:{
-			dynamic:{
-				files: [{
-					expand: true,
-					cwd: 'img/prod/',
-					src: ['**/*.{png,jpg,gif,svg}'],
-					dest: 'img/'
-				}]
+			png:{
+				options: {
+					optimizationLevel: 3
+				},
+				files: [
+					{
+						expand: true,
+						cwd: './development/img/',
+						src: ['**/*.png'],
+						dest: 'public/img/',
+						ext: '.png'
+					}
+				]
+			},
+			jpg:{
+				options: {
+					 progressive: true
+				},
+				files: [
+					{
+						expand: true,
+						cwd: './development/img/',
+						src: ['**/*.jpg'],
+						dest: 'public/img/',
+						ext: '.jpg'
+					}
+				]
+			},
+			gif:{
+				options: {
+					interlaced: true
+				},
+				files: [
+					{
+						expand: true,
+						cwd: './development/img/',
+						src: ['**/*.gif'],
+						dest: 'public/img/',
+						ext: '.gif'
+					}
+				]
+			},
+			svg:{
+				files: [
+					{
+						expand: true,
+						cwd: './development/img/',
+						src: ['**/*.svg'],
+						dest: 'public/img/',
+						ext: '.svg'
+					}
+				]
 			}
 		},
 
 		watch: {
-			concat:{
-				files: ['./development/js/plugins/**'],
-				tasks: ['newer:concat:dist']
-			}
-			// imagemin:{
-			// 	files: ['img/prod/**/**'],
-			// 	tasks: ['imagemin'],
+			// concat:{
+			// 	files: ['./development/js/plugins/**'],
+			// 	tasks: ['newer:concat:dist']
 			// },
+			// newimages:{
+			// 	files: ['development/img/**'],
+			// 	tasks: ['copy:images']
+			// },
+			imagemin:{
+				files: ['development/img/**'],
+				tasks: ['newer:imagemin'],
+			}
 			// uglify:{
 			// 	files: ['js/_src/scripts.js'],
 			// 	tasks: ['uglify:src'],
@@ -209,7 +281,6 @@ module.exports = function(grunt) {
 		});
 	});
 
-	grunt.registerTask('install', ['setup', 'bower', 'copy:copyFiles', 'clean:bowerFiles', 'compass:dev']);
-	grunt.registerTask('renderCSS', ['compass:dev']);
+	grunt.registerTask('install', ['setup', 'bower', 'copy:copyFiles', 'clean:bowerFiles', 'copy:public', 'compass:dist']);
 	grunt.registerTask('default', ['watch']);
 }
