@@ -44,17 +44,6 @@ module.exports = function(grunt) {
 					}
 				]
 			}
-			// ,
-			// public:{
-			// 	assets: [
-			// 		{ folder: 'css' },
-			// 		{ folder: 'js' },
-			// 		{ folder: 'js/libs' },
-			// 		{ folder: 'js/plugins' },
-			// 		{ folder: 'fonts' },
-			// 		{ folder: 'img' },
-			// 	]
-			// }
 		},
 
 		copy:{
@@ -150,9 +139,9 @@ module.exports = function(grunt) {
 			}
 		},
 
-		// jshint:{
-		// 	files: ['js/**/*.js']
-		// },
+		jshint:{
+			files: ['development/js/*.js']
+		},
 
 		concat: {
 			options: {
@@ -232,9 +221,9 @@ module.exports = function(grunt) {
 				files: ['development/img/**'],
 				tasks: ['newer:imagemin'],
 			},
-			uglify:{
+			js:{
 				files: ['development/js/*.js'],
-				tasks: ['uglify:js']
+				tasks: ['jshint', 'uglify:js']
 			}
 		}
 	});
