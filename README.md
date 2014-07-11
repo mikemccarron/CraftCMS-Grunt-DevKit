@@ -5,7 +5,14 @@ A Grunt development workflow designed for working within a Craft (https://buildw
 Overview
 --------
 This is intended to be starting point for developing websites built with Craft.
-The files and folder structure is based on my own personal perferences.
+
+Basically, this is what this does:
+
+* Creates a development enviroment that includes a set of common folders and empty initial files. The files and folder structure is based on my own personal perferences but you can modified it Gruntfile.js
+* Automatically downloads the lastest version of jQuery, Modernizr, Normalize and GASP (TweenMax) from Bower.
+* Handles concatenating scripts and minifying files and images.
+* Minifies JPG, GIF, PNG, and SVG files.
+* Checks your JavaScript against with JSHint.
 
 Thanks to all the great developers who created plugins that made this possible.
 
