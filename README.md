@@ -2,6 +2,8 @@ Grunt workflow for Craft builds.
 ================================
 A Grunt development workflow designed for working within a Craft (https://buildwithcraft.com) project.
 
+**Currently in Beta ("0.2.0")**
+
 Overview
 --------
 This is intended to be starting point for developing websites built with Craft.
