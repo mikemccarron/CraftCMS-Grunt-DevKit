@@ -3,17 +3,13 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
-		bower:{
-			install: {
-				options: {
-					cleanup: true,
-					targetDir: './development/js/libs'
-				}
-			}
+		meta:{
+			dev: 'development',
+			dist: 'public'
 		},
 
 		setup:{
-			development:{
+			structure:{
 				assets: [
 					{
 						folder: 'sass',
@@ -46,14 +42,23 @@ module.exports = function(grunt) {
 			}
 		},
 
+		bower:{
+			install: {
+				options: {
+					cleanup: true,
+					targetDir: './<%= meta.dev %>/js/libs'
+				}
+			}
+		},
+
 		copy:{
 			copyFiles: {
 				files: [
 					 {
 						expand: true,
 						flatten: true,
-						src: ['development/js/libs/normalize-scss/*.scss'],
-						dest: 'development/sass',
+						src: ['<%= meta.dev %>/js/libs/normalize-scss/*.scss'],
+						dest: '<%= meta.dev %>/sass',
 						filter: 'isFile'
 					 }
 				]
@@ -63,9 +68,9 @@ module.exports = function(grunt) {
 					 {
 						expand: true,
 						flatten: false,
-						cwd: './development/',
+						cwd: './<%= meta.dev %>/',
 						src: ['**', '!sass/**', '!**/scripts.js'],
-						dest: 'public/'
+						dest: '<%= meta.dist %>/'
 					 }
 				]
 			},
@@ -74,16 +79,16 @@ module.exports = function(grunt) {
 					 {
 						expand: true,
 						flatten: false,
-						cwd: './development/',
+						cwd: './<%= meta.dev %>/',
 						src: ['img/**'],
-						dest: 'public/'
+						dest: '<%= meta.dist %>/'
 					 }
 				]
 			}
 		},
 
 		clean:{
-			bowerFiles: ['development/js/libs/normalize-scss/']
+			bowerFiles: ['<%= meta.dev %>/js/libs/normalize-scss/']
 		},
 
 		concurrent: {
@@ -98,16 +103,16 @@ module.exports = function(grunt) {
 		compass: {
 			dist:{
 				options: {
-					sassDir: './development/sass',
-					cssDir: './public/css',
+					sassDir: './<%= meta.dev %>/sass',
+					cssDir: './<%= meta.dist %>/css',
 					outputStyle: 'compressed',
 					environment: 'production'
 				}
 			},
 			dev:{
 				options: {
-					sassDir: './development/sass',
-					cssDir: './public/css',
+					sassDir: './<%= meta.dev %>/sass',
+					cssDir: './<%= meta.dist %>/css',
 					outputStyle: 'expanded',
 					environment: 'development',
 					watch: true
@@ -132,24 +137,37 @@ module.exports = function(grunt) {
 				},
 				files: [{
 					expand: true,
-					cwd: 'development/js',
+					cwd: '<%= meta.dev %>/js',
 					src: '*.js',
-					dest: 'public/js'
+					dest: '<%= meta.dist %>/js'
+				}]
+			},
+			plugins:{
+				options: {
+					mangle: {
+						except: ['jQuery', 'Backbone']
+					}
+				},
+				files: [{
+					expand: true,
+					cwd: '<%= meta.dist %>/js/plugins',
+					src: 'plugins.min.js',
+					dest: './<%= meta.dist %>/js/plugins'
 				}]
 			}
 		},
 
 		jshint:{
-			files: ['development/js/*.js']
+			files: ['<%= meta.dev %>/js/*.js']
 		},
 
 		concat: {
 			options: {
 				 separator: ';'
 			},
-			dist: {
-				src: './development/js/plugins/**/*.js',
-				dest: './public/js/plugins/plugins.js'
+			plugins: {
+				src: './<%= meta.dev %>/js/plugins/**/*.js',
+				dest: './<%= meta.dist %>/js/plugins/plugins.min.js'
 			}
 		},
 
@@ -161,9 +179,9 @@ module.exports = function(grunt) {
 				files: [
 					{
 						expand: true,
-						cwd: './development/img/',
+						cwd: './<%= meta.dev %>/img/',
 						src: ['**/*.png'],
-						dest: 'public/img/',
+						dest: '<%= meta.dist %>/img/',
 						ext: '.png'
 					}
 				]
@@ -176,9 +194,9 @@ module.exports = function(grunt) {
 				files: [
 					{
 						expand: true,
-						cwd: './development/img/',
+						cwd: './<%= meta.dev %>/img/',
 						src: ['**/*.jpg'],
-						dest: 'public/img/',
+						dest: '<%= meta.dist %>/img/',
 						ext: '.jpg'
 					}
 				]
@@ -191,9 +209,9 @@ module.exports = function(grunt) {
 				files: [
 					{
 						expand: true,
-						cwd: './development/img/',
+						cwd: './<%= meta.dev %>/img/',
 						src: ['**/*.gif'],
-						dest: 'public/img/',
+						dest: '<%= meta.dist %>/img/',
 						ext: '.gif'
 					}
 				]
@@ -203,9 +221,9 @@ module.exports = function(grunt) {
 				files: [
 					{
 						expand: true,
-						cwd: './development/img/',
+						cwd: './<%= meta.dev %>/img/',
 						src: ['**/*.svg'],
-						dest: 'public/img/',
+						dest: '<%= meta.dist %>/img/',
 						ext: '.svg'
 					}
 				]
@@ -213,17 +231,17 @@ module.exports = function(grunt) {
 		},
 
 		watch: {
-			// concat:{
-			// 	files: ['./development/js/plugins/**'],
-			// 	tasks: ['newer:concat:dist']
-			// },
 			imagemin:{
-				files: ['development/img/**'],
+				files: ['<%= meta.dev %>/img/**'],
 				tasks: ['newer:imagemin'],
 			},
 			js:{
-				files: ['development/js/*.js'],
+				files: ['<%= meta.dev %>/js/*.js'],
 				tasks: ['jshint', 'uglify:js']
+			},
+			newPlugins:{
+				files: ['<%= meta.dev %>/js/plugins/**'],
+				tasks: ['newer:concat:plugins', 'uglify:plugins']
 			}
 		}
 	});
@@ -241,22 +259,32 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-compass');
 	grunt.loadNpmTasks('grunt-contrib-imagemin');
 
-	grunt.registerMultiTask('setup', 'Setup project structure', function() {
-
-		var basePath 	= './'+ this.target +'/';
+	grunt.registerMultiTask('setup', 'Setup project structure', function(dev, dist, structure) {
 		var assets 		= this.data.assets;
+		var dev 		= grunt.config('meta.dev');
+		var dist 		= grunt.config('meta.dist');
+		var devFolder;
+		var distFolder;
 
 		assets.forEach(function( asset ){
-			var folder 	= asset.folder;
-			var files 	= asset.files;
-			var path 	= basePath + folder + '/';
+			var folder 		= asset.folder;
+			var files 		= asset.files;
 
-			grunt.log.writeln('Created folder: ' + path);
-			grunt.file.mkdir( path );
+			devFolder 	= dev + '/' + folder;
+			distFolder	= dist + '/' + folder;
+
+			grunt.log.writeln('Created folder: ' + dev + '/' + folder);
+			grunt.file.mkdir( devFolder );
+
+			if(folder!='sass'){
+				grunt.log.writeln('Created folder: ' + dist + '/' + folder);
+				grunt.file.mkdir( distFolder);
+			}
 
 			if(files){
 				files.forEach(function( file ){
 					var contents = '';
+					var path = dev + '/' + folder + '/' + file;
 
 					if(file=='styles.scss'){
 						contents += '@import "compass/css3";\n';
@@ -267,13 +295,14 @@ module.exports = function(grunt) {
 						contents += '@import "typography";\n';
 					}
 
-					grunt.log.writeln('Added file: ' + file);
-					grunt.file.write( path + file, contents );
+					grunt.log.writeln('\tAdded file: ' + file);
+					grunt.file.write( path, contents );
 				})
 			}
 		});
 	});
 
-	grunt.registerTask('install', ['setup', 'bower', 'copy:copyFiles', 'clean:bowerFiles', 'copy:public', 'compass:dist']);
+	grunt.registerTask('install', ['setup', 'bower', 'copy:copyFiles', 'clean:bowerFiles', 'copy:public', 'compass:dist', 'uglify:js', 'concat:plugins', 'uglify:plugins']);
+	grunt.registerTask('debug', ['watch:newPlugins']);
 	grunt.registerTask('default', ['watch']);
 }
