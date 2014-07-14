@@ -241,7 +241,7 @@ module.exports = function(grunt) {
 			},
 			newPlugins:{
 				files: ['<%= meta.dev %>/js/plugins/**'],
-				tasks: ['newer:concat:plugins', 'uglify:plugins']
+				tasks: ['concat:plugins', 'uglify:plugins']
 			}
 		}
 	});
