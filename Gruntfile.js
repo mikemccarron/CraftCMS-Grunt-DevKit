@@ -74,7 +74,7 @@ module.exports = function(grunt) {
 					 }
 				]
 			},
-			images:{
+			images: {
 				files: [
 					 {
 						expand: true,
@@ -84,11 +84,23 @@ module.exports = function(grunt) {
 						dest: '<%= meta.dist %>/'
 					 }
 				]
+			},
+			fonts: {
+				files: [
+					 {
+						expand: true,
+						flatten: false,
+						cwd: './<%= meta.dev %>/',
+						src: ['fonts/**'],
+						dest: '<%= meta.dist %>/'
+					 }
+				]
 			}
 		},
 
 		clean:{
-			bowerFiles: ['<%= meta.dev %>/js/libs/normalize-scss/']
+			bowerFiles: ['<%= meta.dev %>/js/libs/normalize-scss/'],
+			fonts: ['<%= meta.dist %>/fonts/']
 		},
 
 		concurrent: {
@@ -239,9 +251,13 @@ module.exports = function(grunt) {
 				files: ['<%= meta.dev %>/js/*.js'],
 				tasks: ['jshint', 'uglify:js']
 			},
-			newPlugins:{
+			newPlugins: {
 				files: ['<%= meta.dev %>/js/plugins/**'],
 				tasks: ['concat:plugins', 'uglify:plugins']
+			},
+			newFonts: {
+				files: ['<%= meta.dev %>/fonts/**'],
+				tasks: ['clean:fonts', 'copy:fonts']
 			}
 		}
 	});
